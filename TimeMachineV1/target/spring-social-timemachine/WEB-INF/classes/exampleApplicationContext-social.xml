@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:twitter="http://www.springframework.org/schema/social/twitter"
+	xmlns:social="http://www.springframework.org/schema/social"
+	xmlns:facebook="http://www.springframework.org/schema/social/facebook"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
+       http://www.springframework.org/schema/social/twitter http://www.springframework.org/schema/social/spring-social-twitter.xsd
+       http://www.springframework.org/schema/social/facebook http://www.springframework.org/schema/social/spring-social-facebook.xsd">
+
+	<!-- Ensures that configuration properties are read from a property file -->
+	<context:property-placeholder location="classpath:application.properties" />
+
+	<!-- Configures FB and Twitter support. -->
+
+	<facebook:config app-id="512814392252882"
+		app-secret="09f98273ea5bc0bcf62d203ffc73266c" />
+	<twitter:config app-id="wi4NTxGOow7cOkviYdg2Qt9c2"
+		app-secret="wgyNmuPYG628djuEVFEYHpWAFPqaeTFajwRRLHZWDJW4vjyJcK" />
+
+	<!-- Configures the connection repository. This application uses JDBC connection 
+		repository which saves connection details to database. This repository uses 
+		the data source bean for obtaining database connection. -->
+	<social:jdbc-connection-repository />
+
+	<!-- This bean manages the connection flow between the account provider 
+		and the example application. -->
+	<bean id="connectController"
+		class="org.springframework.social.connect.web.ConnectController"
+		autowire="constructor" />
+</beans>

@@ -1,0 +1,29 @@
+.content {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.sign-in-text {
+    padding-right: 2em;
+}
+
+.social-button-row {
+    padding-top: 1.0em;
+}
+
+.signin_li{
+	padding-right: 10px;
+	
+}
+.signin-a{
+    margin-top:3px;
+}
+.signup-a{
+	margin-top:3px;
+}
+.logout-btn{
+	margin-top:7px;
+}
+.loc{
+	text-align: center;
+}
