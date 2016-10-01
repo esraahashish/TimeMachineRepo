@@ -2,6 +2,7 @@ package com.mvc.timemachine.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,7 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -49,11 +52,24 @@ public class Post {
     @OrderBy("date ASC")
     private List<Comment> comments = new ArrayList<>();
 	
+	@ManyToMany
+	@JoinTable(name = "Post_HashTags", joinColumns = { @JoinColumn(name = "Post_Id") }, inverseJoinColumns = { @JoinColumn(name = "HashTag_Id") })
+	private List<HashTag> postHashTags = new LinkedList<HashTag>();
+	
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
 	
 	
+	public List<HashTag> getPostHashTags() {
+		return postHashTags;
+	}
+
+	public void setPostHashTags(List<HashTag> postHashTags) {
+		this.postHashTags = postHashTags;
+	}
+
 	public List<Comment> getComments() {
 		return comments;
 	}

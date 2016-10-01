@@ -19,23 +19,51 @@ public class HashTag {
 	@Column(name = "HashTag_Id")
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 
 	@Column(name = "description")
 	private String description;
 
 	@Column(name = "frequency")
-	private String frequency;
+	private Long frequency;
 
 	@ManyToMany(mappedBy = "eraHashTags")
 	private List<Era> hashTagEras = new LinkedList<Era>();
 	
 	@ManyToMany(mappedBy = "informationHashTags")
 	private List<Information> hashTagInformation = new LinkedList<Information>();
+	
+	@ManyToMany(mappedBy = "postHashTags")
+	private List<Post> hashTagposts = new LinkedList<Post>();
+	 
 
 	public Long getId() {
 		return id;
+	}
+
+	public List<Era> getHashTagEras() {
+		return hashTagEras;
+	}
+
+	public void setHashTagEras(List<Era> hashTagEras) {
+		this.hashTagEras = hashTagEras;
+	}
+
+	public List<Information> getHashTagInformation() {
+		return hashTagInformation;
+	}
+
+	public void setHashTagInformation(List<Information> hashTagInformation) {
+		this.hashTagInformation = hashTagInformation;
+	}
+
+	public List<Post> getHashTagposts() {
+		return hashTagposts;
+	}
+
+	public void setHashTagposts(List<Post> hashTagposts) {
+		this.hashTagposts = hashTagposts;
 	}
 
 	public void setId(Long id) {
@@ -58,11 +86,11 @@ public class HashTag {
 		this.description = description;
 	}
 
-	public String getFrequency() {
+	public Long getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(String frequency) {
+	public void setFrequency(Long frequency) {
 		this.frequency = frequency;
 	}
 

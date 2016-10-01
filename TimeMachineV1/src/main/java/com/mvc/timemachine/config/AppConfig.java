@@ -10,11 +10,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableAspectJAutoProxy
 @EnableJpaRepositories(basePackages="com.mvc.timemachine.repositories")
+@EnableScheduling
 public class AppConfig {
 
 	private static final String HIBERNATE_DIALECT = "hibernate.dialect";
@@ -37,7 +39,7 @@ public class AppConfig {
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 		dataSource.setUrl("jdbc:mysql://localhost:3306/timemachine_db");
 		dataSource.setUsername("root");
-		dataSource.setPassword("root");
+		dataSource.setPassword("josh0147JOSH");
 		return dataSource;
 	}
 

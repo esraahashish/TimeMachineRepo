@@ -1,6 +1,7 @@
 package com.mvc.timemachine.models;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -38,6 +40,14 @@ public class User extends BaseEntity<Long>{
 	@Column(name = "sign_in_provider", length = 20)
 	private SocialMediaService signInProvider;
 
+	public List<Era> getUserEras() {
+		return userEras;
+	}
+
+	public void setUserEras(List<Era> userEras) {
+		this.userEras = userEras;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 	
@@ -47,6 +57,9 @@ public class User extends BaseEntity<Long>{
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private List<Like> likes = new ArrayList<>();
+	
+	@ManyToMany(mappedBy = "eraUsers")
+	private List<Era> userEras = new LinkedList<Era>();
 	
 	public Long getId() {
 		return id;

@@ -17,4 +17,6 @@ public interface UserService {
 	public User registerNewUserAccount(RegistrationFormDTO userAccountData) throws DuplicateEmailException;
 
 	public User loginUser(User user);
+	
+	public User getUserByid(Long userId);
 }

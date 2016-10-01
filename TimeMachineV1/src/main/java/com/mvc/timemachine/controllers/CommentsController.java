@@ -36,7 +36,7 @@ public class CommentsController {
 			return "error";
 		}
 		List<Comment> comments = commentsService.getAllCommentsByPostId(postId);
-		return null;//"[" + comments.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
+		return "[" + comments.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
 	}
 	private String toJsonLink(Comment comment) {
         return "{" + JsonUtils.toJsonField("id", comment.getId().toString()) + ", " + JsonUtils.toJsonField("text", comment.getCommentText()) + ", " + JsonUtils.toJsonField("date", comment.getDate().toString()) + "}";

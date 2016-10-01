@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.mvc.timemachine.models.HashTag;
 import com.mvc.timemachine.models.Post;
 import com.mvc.timemachine.services.PostsService;
+import com.mvc.timemachine.services.UserService;
 import com.mvc.timemachine.utils.JsonUtils;
 
 
@@ -27,28 +29,35 @@ public class PostsController {
 
 	@Autowired
 	PostsService postsService;
-	private Integer postsSize = 0;
-	private Integer start = 0, end = 0; // start must be greater than end =>
-										// start is last record
+	@Autowired
+	UserService usersService;
+
 
 	@RequestMapping(value = "/top/{postsRequired}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody String setTopPosts(@RequestParam(value = "eraId") Long eraId,
+	public @ResponseBody String setTopPosts(@RequestParam(value = "eraId") Long eraId,@RequestParam(value = "userId") Long userId,
 			@PathVariable("postsRequired") Integer postsRequired) {
-		List<Post> posts = postsService.getAllPostsbyEraId(eraId);
-		postsSize = posts.size();
-		start = postsSize;
-		end = (start - postsRequired > 0) ? (start - postsRequired) : 0;
-		List<Post> topPosts = postsService.filterPosts(eraId, start, end, postsSize);
-		return null ;// "[" + topPosts.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
+		List<Post> posts;
+		if(userId == null){
+			posts = postsService.getTopEraPosts(eraId, postsRequired);
+		}
+		else{
+			posts = postsService.getTopEraUserPosts(eraId, userId, postsRequired);
+		}
+		return "[" + posts.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
 	}
 
-	@RequestMapping(value = "/next/{postsRequired}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody String getSomePosts(@RequestParam(value = "eraId") Long eraId,
-			@PathVariable("postsRequired") Integer postsRequired) {
-		start = end;
-		end = (start - postsRequired > 0) ? (start - postsRequired) : 0;
-		List<Post> posts = postsService.filterPosts(eraId, start, end, postsSize);
-		return null ;//"[" + posts.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
+	@RequestMapping(value = "/next/{beginingIndex}/{postsRequired}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody String getSomePosts(@RequestParam(value = "eraId") Long eraId,@RequestParam(value = "userId") Long userId,
+			@PathVariable("postsRequired") Integer postsRequired, @PathVariable("beginingIndex") Integer beginingIndex) {
+		List<Post> posts;
+		if(userId == null){
+			posts = postsService.getNextEraPosts(eraId, postsRequired, beginingIndex);
+		}
+		else{
+			
+			posts = postsService.getNextEraUserPosts(eraId, userId, postsRequired, beginingIndex);
+		}
+		return "[" + posts.stream().map(this::toJsonLink).collect(Collectors.joining(", \n")) + "]";
 	}
 
 	private String toJsonLink(Post post) {
@@ -79,6 +88,13 @@ public class PostsController {
 			return "error";
 		}
 		postsService.savePost(post);
+		
+		
+		//*******************newly added********************
+		postsService.extractPostHashTags(post.getId());
+		//**************************************************
+		
+		
 		return "Ok";
 	}
 
@@ -100,6 +116,12 @@ public class PostsController {
 		try {
 			post.setId(postId);
 			post2 = postsService.editPost(post);
+			
+			//*******************newly added********************
+			postsService.extractPostHashTags(post2.getId());
+			//**************************************************
+			
+			
 		} catch (RuntimeException e) {
 			String status = "error";
 		}
@@ -119,7 +141,16 @@ public class PostsController {
 	@RequestMapping(value = "/{postId}/like", method = RequestMethod.POST)
 	public String likePost(@PathVariable("postId") Long postId, @RequestParam(value = "userId") Long userId) {
 
-		return null;// postsService.likePost(postsService.getPostById(postId), usersService.getUserByid(userId));
+		return postsService.likePost(postsService.getPostById(postId), usersService.getUserByid(userId));
 
 	}
+	
+	
+	//*******************************************getting hashtags from a post**********************************************************
+//	@RequestMapping(value = "/extract_hashtags/{postId}", method = RequestMethod.GET)
+//	public List<HashTag> getPostHashTags(@PathVariable("postId") Long postId){
+//		return postsService.getPostHashTags(postId);
+//	}
+	
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.mvc.timemachine.models.Like;
 
 
+
 @Repository
 public interface LikesRepo extends JpaRepository <Like, Long>{
 
